@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"outDir": "dist/",
+		"removeComments": true,
+		"rootDir": "src/",
+		"esModuleInterop": true
+	}
+}
