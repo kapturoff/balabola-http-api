@@ -11,8 +11,7 @@
   "keywords": [],
   "dependencies": {
     "express": "^4.17.3",
-    "puppeteer": "^13.4.0",
-    "yargs": "^17.3.1"
+    "puppeteer": "^13.4.0"
   },
   "author": "kapturoff",
   "license": "ISC",
