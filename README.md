@@ -29,7 +29,7 @@ requests from other scripts to Yandex Balabola and returns its response.
 ## How to interact?
 Now the project is running and listening 4000 port. You can already access its API. For example, type this in your browser address bar:
 ```
-http://localhost:4000/generate?q=Кошка&style=6"
+http://localhost:4000/generate?query=Кошка&style=6"
 ```
 And it will generate a short story bases on word "Кошка". For getting the whole list of styles, you can access this endpoint:
 ```
