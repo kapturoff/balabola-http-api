@@ -16,6 +16,12 @@ export enum Styles {
 	'Гороскоп' = 10,
 }
 
+export type ResponseDetails = {
+	generatedText: string | null
+	timeSpent: number
+	error: null | string
+}
+
 /**
  * Opens a new page with Yandex Balabola and request the query in it
  */
@@ -23,7 +29,8 @@ export default async function getGeneratedText(
 	browser: Browser,
 	query: string,
 	style: Styles
-): Promise<string> {
+): Promise<ResponseDetails> {
+	const start = Date.now()
 	const page = await browser.newPage()
 
 	// Goes to Balabola site
@@ -43,21 +50,33 @@ export default async function getGeneratedText(
 
 	try {
 		// Waits for a response
-		await page.waitForSelector('div.response')
+		await page.waitForSelector('div.response', {
+			timeout: 7000, // Waits for 7 seconds. If there's still no response, probably an error occured
+		})
 
 		// Gets the response content
 		const result = await page.$eval(
-			'.balaboba-response-text-span',
-			(el) => el.textContent
-		)
+				'.balaboba-response-text-span',
+				(el) => el.textContent
+			),
+			end = Date.now()
 
-		return result
-	} catch (error) {
+		return {
+			generatedText: result,
+			timeSpent: (end - start) / 1000,
+			error: null,
+		}
+	} catch {
 		const errorMessage = await page.$eval(
-			'p.init__error',
-			(el) => el.textContent
-		)
+				'p.init__error',
+				(el) => el.textContent
+			),
+			end = Date.now()
 
-		return errorMessage
+		return {
+			generatedText: null,
+			timeSpent: (end - start) / 1000,
+			error: errorMessage,
+		}
 	}
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import getGeneratedText, { Styles } from '../generateText'
+import getGeneratedText, { Styles, ResponseDetails } from '../generateText'
 import puppeteer from 'puppeteer'
 
 type RequestQueries = {
@@ -12,16 +12,17 @@ export default (browser: puppeteer.Browser) =>
 		const { query, style } = request.query
 
 		if (!query || !(style in Styles)) {
-			response.send('Error: Query or style was not set.')
+			const errorDetails: ResponseDetails = {
+				generatedText: null,
+				timeSpent: 0,
+				error: 'Не были переданы query или style',
+			}
+
+			response.json(errorDetails)
 			return
 		}
 
-		const start = Date.now()
 		const generatedText = await getGeneratedText(browser, query, style)
-		const end = Date.now()
 
-		response.json({
-			timeSpent: (end - start) / 1000,
-			generatedText,
-		})
+		response.json(generatedText)
 	}
